@@ -1,5 +1,6 @@
 slidenumbers: true
 footer: Doctrine 2 — Laravel Austin
+theme: Work Projectors
 
 # [fit] Doctrine 2
 
