@@ -1,3 +1,4 @@
 *.pdf
 logos
 old-presentations
+.DS_Store
