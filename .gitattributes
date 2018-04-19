@@ -1,0 +1,4 @@
+laravel-passport/authorize-code.mov filter=lfs diff=lfs merge=lfs -text
+laravel-passport/implicit-grant.mov filter=lfs diff=lfs merge=lfs -text
+laravel-passport/password-grant.mov filter=lfs diff=lfs merge=lfs -text
+laravel-passport/refresh-grant.mov filter=lfs diff=lfs merge=lfs -text
