@@ -149,6 +149,33 @@ Vue.component(
 
 ---
 
+# [fit] Consuming Your API With JavaScript
+
+When building an API, it can be extremely useful to be able to consume your own API from your JavaScript application.
+
+^ This approach to API developments allows your own application to consume the same API that you share with the world. Typically if you consume your API from your JavaScript application, you'd need to manually send an access token to the application and pass it with each request.
+
+---
+
+```php
+'web' => [
+    // Other middleware...
+    \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
+],
+```
+
+```js
+window.axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest',
+};
+```
+
+This Passport middleware attaches a `laravel_token` cookie to outgoing requests, containing an encrypted JWT.
+
+^ Passport includes a middleware that can handle this for you though. This middleware will attach a laravel_token cookie to your outgoing responses. This cookie will contain an encrypted JWT that Passport will use to authenticate API requests from your JavaScript application.
+
+---
+
 # [fit] Deploying Passport
 
 When deploying for the first time, you'll likely need to run _`passport:keys`_
@@ -250,7 +277,7 @@ Access tokens eventually expire; some grants respond with refresh tokens allowin
 ![fit autoplay loop](laravel-passport/refresh-grant.mov)
 
 
-^ Explain in greater detail why the refresh grant is useful for your application.
+^ As you can see here, you're able to request a new access token without any user input with a refresh token. This allows you to keep a seamless experience with the user once they login, as long as the refresh token is valid
 
 ---
 
@@ -266,7 +293,9 @@ This grant allows your other first-party clients, such as mobile apps, to obtain
 
 ![fit autoplay loop](laravel-passport/password-grant.mov)
 
-^ Explain in greater detail why you'd only use this grant for first party applications. https://tools.ietf.org/html/rfc6749#section-4.3
+^ This grant shines when you control both the client application and the resource that the client is interacting with. This grant requires you to be able to trust the client to store it's secret securely, as well as being trusted with the users credentials.
+
+^ A good example of this would be the Facebook client apps for iPhone and Android interacting with the Facebook service.
 
 ---
 
@@ -274,7 +303,7 @@ This grant allows your other first-party clients, such as mobile apps, to obtain
 
 Similar to the authorization code grant; however, the token is returned to the client without an authorization code.
 
-^ This grant is commonly used for JavaScript or mobile applications where the client credentials can't be securely stored. This grant needs to be enabled by calling the enableImplicitGrant method in your AuthServiceProvider
+^ This grant is commonly used for JavaScript or mobile applications where the client credentials can't be securely stored.
 
 ---
 
@@ -298,15 +327,17 @@ public function boot()
 }
 ```
 
+^ To enable this grant, call the enableImplicitGrant method in your AuthServiceProvider
+
 ---
 
 [.hide-footer]
 
 ![fit autoplay loop](laravel-passport/implicit-grant.mov)
 
-^ Explain in greater detail when you'd use this grant. Explain no refresh token (https://alexbilbie.com/guide-to-oauth-2-grants/)
+^ As I mentioned before, this grant or flow is intended for applications where you cannot keep the client secret confidential. Because the client does not have the client secret, you won't be able to make a traditional request for an access token, an instead you recieve it from the authorize endpoint. Single Page Apps (SPAs) benifit greatly from this grant
 
-^ https://tools.ietf.org/html/rfc6749#section-4.3
+^ Because this grant is intended for less-trusted clients, the implicit grant does not support refresh tokens.  
 
 ---
 
@@ -319,6 +350,16 @@ Suitable for machine-to-machine authentication.
 
 
 ^ A good example of using this grant type would be for scheduled jobs that perform maintance tasks over an API. To use this grant you first need to enable a middleware, and then attach it to a route.
+
+---
+
+[.hide-footer]
+
+![fit autoplay loop](laravel-passport/client-credentials-grant.mov)
+
+^ Applications using this grant have to be server side because it has to be trusted with the client secret, and since the credentials are hard coded, there is no actual end user. 
+
+^ This grant does not support refresh tokens, since you can just re-request a new access token whenever you need to without any end user interaction
 
 ---
 
@@ -396,30 +437,9 @@ if ($request->user()->tokenCan('place-orders')) {
 
 ---
 
-# [fit] Consuming Your API With JavaScript
+# [fit] Whats Inside An **Access Token**?
 
-When building an API, it can be extremely useful to be able to consume your own API from your JavaScript application.
-
-^ This approach to API developments allows your own application to consume the same API that you share with the world. Typically if you consume your API from your JavaScript application, you'd need to manually send an access token to the application and pass it with each request.
-
----
-
-```php
-'web' => [
-    // Other middleware...
-    \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
-],
-```
-
-```js
-window.axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-};
-```
-
-This Passport middleware attaches a `laravel_token` cookie to outgoing requests, containing an encrypted JWT.
-
-^ Passport includes a middleware that can handle this for you though. This middleware will attach a laravel_token cookie to your outgoing responses. This cookie will contain an encrypted JWT that Passport will use to authenticate API requests from your JavaScript application.
+![inline fit](laravel-passport/jwt-decoded.png)
 
 ---
 
@@ -482,3 +502,5 @@ github.com/_hskrasek_
 
 
 ![right](laravel-passport/vanity.jpg)
+
+^ Give a shout out to Keith Casey and Okta for auth grant information
