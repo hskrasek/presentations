@@ -441,6 +441,30 @@ if ($request->user()->tokenCan('place-orders')) {
 
 ![inline fit](laravel-passport/jwt-decoded.png)
 
+^ Access tokens created by Passport are actually JWT (JSON Web Tokens).
+
+^ JWT consist of three parts: Header, Payload, Signature.
+
+^ The header typically consists of two parts: the type of the token which is JWT and the hashing algo used.
+
+^ The second part of the token is the payload, which contains claims. Claims are basically statements about an entity along with additional metadata. There are a set of claims that are registered and predefined, but not required. Here we have the following claims:
+
+^ aud (audience), identifies the recipients that the JWT is itended for. In this case, the client who generated the access token
+
+^ jti (JWT ID), self explanatory, the id of the access token
+
+^ iat (issued at), the time when the JWT or access token was issued.
+
+^ nbf (not before), this is the time before the JWT MUST NOT be accepted
+
+^ exp (expiration time), the time on or after the JWT MUST NOT be accepted.
+
+^ sub (Subject), the subject of the JWT, or in our case the user ID.
+
+^ Scopes here is a custom claim, basically an array of the scopes the token has.
+
+^ The final piece is a signature, used to verify that the JWT was not changed in transit. This is where those encryption keys come into play, as they are used for the signing portion
+
 ---
 
 # [fit] Events
