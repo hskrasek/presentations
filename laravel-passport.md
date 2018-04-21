@@ -521,6 +521,7 @@ public function testServerCreation()
 
 @_hskrasek_
 github.com/_hskrasek_
+https://joind.in/talk/ab0ec
 
 ![inline, left](laravel-passport/modernize-logo@10x.png)![inline, right](laravel-passport/Laravel-ATX-logo-1.png)
 
